@@ -6,5 +6,7 @@
 
 char** readFile(char* fpath){;
     char** t;
+    FILE* file;
+    file = fopen("", "r")
     return t;
 }
