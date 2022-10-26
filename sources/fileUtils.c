@@ -4,7 +4,7 @@
 
 #include "fileUtils.h"
 
-#define MAX_LINE_LENGTH 1024
+#define BUFFER_SIZE 1024
 
 //reads the txt file and returns a 2D array of chars
 //each index of the array points to a string
@@ -19,10 +19,10 @@ int readFile(char* fpath, char*** return_value, int* size){;
         return 0;
     }
     int line_nbr = 0;
-    char buffer[MAX_LINE_LENGTH];
+    char buffer[BUFFER_SIZE];
     //we run through the file a first time to get the number of lines.
     while (!feof(file)){
-        fgets(buffer, MAX_LINE_LENGTH, file);
+        fgets(buffer, BUFFER_SIZE, file);
         line_nbr ++;
     }
     //we reset pointer's position
@@ -30,7 +30,7 @@ int readFile(char* fpath, char*** return_value, int* size){;
     char** storage = (char*) malloc(line_nbr*sizeof(char*));
     int index_count = 0;
     while (!feof(file)){
-        fgets(buffer, MAX_LINE_LENGTH, file);
+        fgets(buffer, BUFFER_SIZE, file);
         int line_size = strlen(buffer);
         storage[index_count] = (char*)malloc(line_size*sizeof(char));
         strncpy(storage[index_count], buffer, line_size);
