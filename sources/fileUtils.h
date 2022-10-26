@@ -7,7 +7,9 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 
-char** readFile(char*);
+
+int readFile(char* fpath, char*** return_value, int* size);
 
 #endif //PROJET_C_FILEUTILS_H
