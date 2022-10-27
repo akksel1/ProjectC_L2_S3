@@ -7,7 +7,9 @@
 
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 void findChar(char* string, char target, int** indexes, int* indexes_size);
+void splitStr(char* string, char separator, char*** split_tab, int* tab_size);
 
 #endif //PROJET_C_STRINGUTILS_H
