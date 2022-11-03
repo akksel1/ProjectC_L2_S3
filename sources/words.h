@@ -27,7 +27,7 @@ typedef struct s_word {
 typedef struct s_node {
     char val;
     BOOL end;
-    p_word derives;
+    p_word derives; //faire une liste => t_ht list dans le cours
     int d_size;
     struct s_node** next[26];
     int n_size;
