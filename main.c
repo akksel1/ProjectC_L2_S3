@@ -37,8 +37,36 @@ char* generate_dict_abs_path(char* relative_path){
 
 }
 
-int main() {
+p_dict_line* parseLines(int* tabsize){
     char* fpath = generate_dict_abs_path("sources\\dico.txt");
+    char** lines;
+    int size;
+    *(tabsize) = 0;
+    int result = readFile(fpath, &lines, &size);
+    printf("There are %d lines in the dict \n", size);
+    p_dict_line* tab = malloc(sizeof(p_dict_line)*size);
+    if (result) {
+        for (int i = 0; i < size; i++){
+            char* line = lines[i];
+            p_dict_line dictLine = buildDictLine(line);
+            if (dictLine){
+                tab[*(tabsize)] = dictLine;
+                *(tabsize)+=1;
+            }
+            else{
+                //printf("Failed line %d :\n", i);
+                //printf("%s\n", lines[i]);
+            }
+        }
+        return tab;
+    }
+    else{
+        return NULL;
+    }
+}
+
+int main() {
+    /*char* fpath = generate_dict_abs_path("sources\\dico.txt");
     char** lines;
     int size;
     int result = readFile(fpath, &lines, &size);
@@ -57,6 +85,14 @@ int main() {
         }
     }
     free(lines);
-    free(fpath);
+    free(fpath);*/
+    int size;
+    p_dict_line* parsedDict = parseLines(&size);
+    printf("%d lines parsed. \n", size);
+    int middle_line = 45221;
+    printf("Line %d is :\n", middle_line);
+    printf("-Root : %s\n-Word : %s\n-Details : %s\n", parsedDict[middle_line]->root, parsedDict[middle_line]->word, parsedDict[middle_line]->details);
+
+    free(parsedDict);
     return 0;
 }

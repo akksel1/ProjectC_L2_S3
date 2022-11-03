@@ -4,7 +4,7 @@
 
 #include "fileUtils.h"
 
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE 2048
 
 //reads the txt file and returns a 2D array of chars
 //each index of the array points to a string
