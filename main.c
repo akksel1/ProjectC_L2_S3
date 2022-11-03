@@ -44,8 +44,8 @@ p_dict_line* parseLines(int* tabsize){
     *(tabsize) = 0;
     int result = readFile(fpath, &lines, &size);
     printf("There are %d lines in the dict \n", size);
-    p_dict_line* tab = malloc(sizeof(p_dict_line)*size);
     if (result) {
+        p_dict_line* tab = malloc(sizeof(p_dict_line)*size);
         for (int i = 0; i < size; i++){
             char* line = lines[i];
             p_dict_line dictLine = buildDictLine(line);

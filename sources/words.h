@@ -29,6 +29,8 @@ typedef struct s_node {
     BOOL end;
     p_word derives;
     int d_size;
+    struct s_node** next[26];
+    int n_size;
 }node, *p_node;
 
 typedef struct s_root{
