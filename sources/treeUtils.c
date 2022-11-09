@@ -3,3 +3,10 @@
 //
 
 #include "treeUtils.h"
+
+root createEmptyTree()
+{
+    root t;
+    t.node = NULL;
+    return t;
+}

@@ -3,6 +3,7 @@
 //
 
 #include "words.h"
+#include <string.h>
 
 p_dict_line buildDictLine(char* line){
     int tabSize;
@@ -18,4 +19,15 @@ p_dict_line buildDictLine(char* line){
     else {
         return NULL;
     }
+}
+
+
+// create an empty node with no character as a value which is not the end of a word, no letters after and no derive
+p_node CreateEmptyNode(){
+    p_node p;
+    p->val="";
+    p->end=0;
+    memset(p->next,NULL,26);
+    p->derives=NULL;
+    return p;
 }

@@ -24,13 +24,28 @@ typedef struct s_word {
     int size;
 }word, *p_word;
 
+
+struct s_cell
+{
+    p_word derive;
+    struct s_cell *next;
+};
+
+typedef struct s_cell cell, *p_cell;
+
+typedef struct s_list
+{
+    p_cell head;
+} t_list, *p_list;
+
 typedef struct s_node {
     char val;
     BOOL end;
-    p_word derives; //faire une liste => t_ht list dans le cours
+    p_list derives;
     struct s_node** next[26];
 }node, *p_node;
 
 p_dict_line buildDictLine(char* line);
+p_node CreateEmptyNode();
 
 #endif //PROJET_C_WORDS_H
