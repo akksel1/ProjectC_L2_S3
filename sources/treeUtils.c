@@ -10,14 +10,14 @@ root createEmptyTree()
     t.node = NULL;
     return t;
 }
-
+// create each tree
 p_node setupsubTree(char* type){
     p_node p;
     p=CreateEmptyNode();
     p->val=type;
     return p;
 }
-
+// set up general
 root setupTree(root t){
     p_node hub,verbe,nom,adjectif,adverbe;
     hub=setupsubTree("hub");

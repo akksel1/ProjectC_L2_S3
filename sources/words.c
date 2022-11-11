@@ -22,7 +22,7 @@ p_dict_line buildDictLine(char* line){
 }
 
 
-// create an empty node with no character as a value which is not the end of a word, no letters after and no derive
+// create an empty node with no character as a value which is not the end of a word, no letters after and no derive be careful
 p_node CreateEmptyNode(){
     p_node p;
     p->val="";

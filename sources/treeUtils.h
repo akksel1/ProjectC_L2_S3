@@ -12,7 +12,7 @@ typedef struct s_root{
 }root, *p_root;
 
 root createEmptyTree();
-
+//creation of the general tree
 p_node setupsubTree(char*);
 root setupTree(root);
 

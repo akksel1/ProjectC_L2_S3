@@ -38,6 +38,7 @@ typedef struct s_list
     p_cell head;
 } t_list, *p_list;
 
+//here
 typedef struct s_node {
     char* val;
     BOOL end;
