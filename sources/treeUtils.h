@@ -13,4 +13,7 @@ typedef struct s_root{
 
 root createEmptyTree();
 
+p_node setupsubTree(char*);
+root setupTree(root);
+
 #endif //PROJET_C_TREEUTILS_H

@@ -39,7 +39,7 @@ typedef struct s_list
 } t_list, *p_list;
 
 typedef struct s_node {
-    char val;
+    char* val;
     BOOL end;
     p_list derives;
     struct s_node** next[26];

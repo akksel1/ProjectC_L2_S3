@@ -27,7 +27,7 @@ p_node CreateEmptyNode(){
     p_node p;
     p->val="";
     p->end=0;
-    memset(p->next,NULL,26);
+    memset(p->next,0,26);
     p->derives=NULL;
     return p;
 }
