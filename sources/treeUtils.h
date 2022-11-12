@@ -7,9 +7,6 @@
 
 #include "words.h"
 
-typedef struct s_root{
-    p_node node;
-}root, *p_root;
 
 root createEmptyTree();
 //creation of the general tree

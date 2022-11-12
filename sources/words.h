@@ -19,9 +19,8 @@ typedef struct s_dict_line {
 }dict_line, *p_dict_line;
 
 typedef struct s_word {
-    int magic_nbr;
+    char magic_nbr;
     char* value;
-    int size;
 }word, *p_word;
 
 
@@ -46,7 +45,18 @@ typedef struct s_node {
     struct s_node** next[26];
 }node, *p_node;
 
+typedef struct s_root{
+    p_node node;
+}root, *p_root;
+
+
 p_dict_line buildDictLine(char* line);
 p_node CreateEmptyNode();
+p_node CreateNode(char);
+p_cell CreateCell(char*);
+int which_index(char);
+int which_type(char*);
+char GenerateMagicNumber(char*, int);
+void addword(p_root,p_dict_line,int,int);
 
 #endif //PROJET_C_WORDS_H
