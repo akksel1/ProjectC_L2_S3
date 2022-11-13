@@ -56,7 +56,7 @@ p_node CreateNode(char);
 p_cell CreateCell(char*);
 int which_index(char);
 int which_type(char*);
-char GenerateMagicNumber(char*, int);
+p_mn GenerateMagicNumber(char*, int);
 void addword(p_root,p_dict_line,int,int);
 
 #endif //PROJET_C_WORDS_H

@@ -49,13 +49,15 @@ p_cell CreateCell(char* my_str)
     return p;
 }
 
+
 //Function which returns the index of a letter in the alphabet using ASCII code
 int which_index(char my_letter)
 {
     if(my_letter>96 && my_letter<123)
     return my_letter % 26;
 
-    else printf("error - unknown letter");
+    else printf("error - unknown letter");{
+    return -1;}
 }
 
 //Function which returns the type number of a word
@@ -97,8 +99,26 @@ char GenerateMagicNumber(char* derive_type, int type)
         }
         case 1:
         {
-            char* gender = malloc(sizeof(char)*3);
-            strncpy(gender,derive_type+4,2);
+            int i;
+            char* dest,*gender,*nb;
+            gender = (char*)malloc(sizeof(char)*7);
+            nb = (char*)malloc(sizeof(char)*7);
+            dest = (char*)malloc(sizeof(char)*10);
+
+            strncpy(dest,derive_type+4,10); //Pour extraire la fin des details sans le "Nom:"
+
+            i=0;
+            while(dest[i]!='+')
+            {
+                gender[i] = dest[i];
+                i++;
+            }
+
+            while(dest[i]!='\0')
+            {
+                nb[i] = dest[i];
+                i++;
+            }
             if(strcmp(gender,"Mas")==0)
             {
                 MagicNumber[1]='0';
@@ -107,9 +127,10 @@ char GenerateMagicNumber(char* derive_type, int type)
             {
                 MagicNumber[1]='1';
             }
-
-            char* nb = malloc(sizeof(char)*3);
-            strncpy(nb,derive_type+8,2);
+            if(strcmp(gender,"InvGen")==0)
+            {
+                MagicNumber[1]='1';
+            }
             if(strcmp(nb,"SG")==0)
             {
                 MagicNumber[1]='0';
@@ -122,6 +143,46 @@ char GenerateMagicNumber(char* derive_type, int type)
         }
         case 2:
         {
+            int i;
+            char* dest,*gender,*nb;
+            gender = (char*)malloc(sizeof(char)*7);
+            nb = (char*)malloc(sizeof(char)*7);
+            dest = (char*)malloc(sizeof(char)*10);
+
+            strncpy(dest,derive_type+4,10); //Pour extraire la fin des details sans le "Nom:"
+
+            i=0;
+            while(dest[i]!='+')
+            {
+                gender[i] = dest[i];
+                i++;
+            }
+
+            while(dest[i]!='\0')
+            {
+                nb[i] = dest[i];
+                i++;
+            }
+            if(strcmp(gender,"Mas")==0)
+            {
+                MagicNumber[1]='0';
+            }
+            if(strcmp(gender,"Fem")==0)
+            {
+                MagicNumber[1]='1';
+            }
+            if(strcmp(gender,"InvGen")==0)
+            {
+                MagicNumber[1]='1';
+            }
+            if(strcmp(nb,"SG")==0)
+            {
+                MagicNumber[1]='0';
+            }
+            if(strcmp(nb,"PL")==0)
+            {
+                MagicNumber[1]='1';
+            }
             break;
         }
         case 3:
@@ -167,31 +228,32 @@ void addword(p_root my_tree,p_dict_line my_word,int n, int type)
                 if(i<strlen(my_word->root)-1)
                 temp = (*temp)->next[which_index(my_letter)];
             }
-
+            // char** tableaumagicnumber;
+            //
+            //def magic number
+            //set up boucle magic[i]
             temp1 = (*temp)->derives->head;
             if(temp1==NULL)
             {
                 temp1 = CreateCell(my_word->word);
-                temp1->derive->magic_nbr= GenerateMagicNumber(my_word->details,type);
+                temp1->derive->magic_nbr= GenerateMagicNumber(my_word->details,type);//change to magic number[i]
             }
-
-            bool=0;
-            //Is the derivation already in the list ?
-            while(temp1->next!=NULL && bool!=1)
-            {
-                if(my_word->word == temp1->derive->value)
-                {
-                    bool=1;
+            else {
+                bool = 0;
+                //Is the derivation already in the list ?
+                while (temp1->next != NULL && bool != 1) {
+                    if (my_word->word == temp1->derive->value) {//not value but magic number et not word mais magic number[i]
+                        bool = 1;
+                    }
+                    temp1 = temp1->next;
                 }
-                temp1=temp1->next;
-            }
-            //Add the derivation to the list if not exist
-            if(bool!=1)
-            {
-                temp2 = CreateCell(my_word->word);
-                temp2->derive->magic_nbr= GenerateMagicNumber(my_word->details,type);
-                temp1->next = temp2;
-                free(temp2);
+                //Add the derivation to the list if not exist
+                if (bool != 1) {
+                    temp2 = CreateCell(my_word->word);
+                    temp2->derive->magic_nbr = GenerateMagicNumber(my_word->details, type);//magic number[i]
+                    temp1->next = temp2;
+                    free(temp2);
+                }
             }
             break;
         }
