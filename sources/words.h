@@ -19,7 +19,7 @@ typedef struct s_dict_line {
 }dict_line, *p_dict_line;
 
 typedef struct s_word {
-    char magic_nbr;
+    char* magic_nbr;
     char* value;
 }word, *p_word;
 

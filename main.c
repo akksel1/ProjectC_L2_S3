@@ -38,7 +38,7 @@ char* generate_dict_abs_path(char* relative_path){
 }
 
 p_dict_line* parseLines(int* tabsize){
-    char* fpath = generate_dict_abs_path("sources\\dico.txt");
+    char* fpath = "C:\\Users\\akksel\\CLionProjects\\ProjectC_L2_S3\\sources\\dico.txt";
     char** lines;
     int size;
     *(tabsize) = 0;
