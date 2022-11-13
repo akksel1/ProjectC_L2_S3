@@ -94,13 +94,79 @@ char* GenerateMagicNumber(char* derive_type, int type)
     {
         case 0:
         {
+            //verbs is a tense is not implemented yet tense =-1
+            int i;
+            char* tense,*pers,*nb;
+            tense = (char*)malloc(sizeof(char)*7);
+            pers = (char*)malloc(sizeof(char)*7);
+            nb = (char*)malloc(sizeof(char)*7);
 
+            //We extract the relevant infos from details
+            i=0;
+            while(derive_type[i]!='+')
+            {
+                tense[i] = derive_type[i];
+                i++;
+            }
+            i++;
+            while(derive_type[i]!='+')
+            {
+                nb[i] = derive_type[i];
+                i++;
+            }
+            i++;
+            while(derive_type[i]!='\0')
+            {
+                pers[i] = derive_type[i];
+                i++;
+            }
+            if(strcmp(pers,"P1")==0)
+            {
+                MagicNumber[3]='0';
+            }
+            if(strcmp(pers,"P2")==0)
+            {
+                MagicNumber[3]='1';
+            }
+            if(strcmp(pers,"P3")==0)
+            {
+                MagicNumber[3]='2';
+            }
+            if(strcmp(tense,"IPre")==0)
+            {
+                MagicNumber[1]='0';
+            }
+            else{
+                if(strcmp(tense,"IImp")==0)
+                {
+                    MagicNumber[1]='1';
+                }
+                else{
+                    if(strcmp(tense,"SPre")==0)
+                    {
+                        MagicNumber[1]='2';
+                    }
+                    else{
+                        MagicNumber[1]='9';
+                    }
+                }
+
+            }
+
+            if(strcmp(nb,"SG")==0)
+            {
+                MagicNumber[2]='0';
+            }
+            if(strcmp(nb,"PL")==0)
+            {
+                MagicNumber[2]='1';
+            }
             break;
         }
         case 1:
         {
             int i;
-            char* dest,*gender,*nb;
+            char*gender,*nb;
             gender = (char*)malloc(sizeof(char)*7);
             nb = (char*)malloc(sizeof(char)*7);
 
@@ -142,7 +208,7 @@ char* GenerateMagicNumber(char* derive_type, int type)
         case 2:
         {
             int i;
-            char* dest,*gender,*nb;
+            char*gender,*nb;
             gender = (char*)malloc(sizeof(char)*7);
             nb = (char*)malloc(sizeof(char)*7);
 
@@ -190,16 +256,102 @@ char* GenerateMagicNumber(char* derive_type, int type)
     return MagicNumber;
 }
 
+p_node findword(p_dict_line my_word,p_root my_tree,int type){
+    p_node* subtree = my_tree->node->next[type];
+    p_node* temp = subtree; //temp ptr to cross the subtree
+    char my_letter;
+    //Loop to cross the subtree & add nodes
+    for(int i=0;i<strlen(my_word->root);i++)
+    {
+        my_letter = my_word->root[i];
+        if ((*temp)->next[which_index(my_letter)] == NULL){
+            return NULL;
+        }
+        temp = (*temp)->next[which_index(my_letter)];
+    }
+    return *temp;
+}
+
+
+void createword(p_dict_line my_word,p_node* temp){
+    p_node result;
+    char my_letter;
+    //Loop to cross the subtree & add nodes
+    for(int i=0;i<strlen(my_word->root);i++)
+    {
+        my_letter = my_word->root[i];
+        if(temp==NULL ||((*temp)->next[which_index(my_letter)] == NULL) )
+        {
+            result = CreateNode(my_letter);
+            (*temp)->next[which_index(my_letter)] = &result;
+        }
+
+        if(i<strlen(my_word->root)-1)
+            temp = (*temp)->next[which_index(my_letter)];
+    }
+}
+
+void fillMNb(p_dict_line my_word, int type,p_node* temp){
+    p_cell temp1,temp2; //temp ptrs to cross the derivation list
+    char* MagicNb;
+    int tabSize;
+    char** details_tab;
+    int bool=0;
+    //Creation of the array of details
+    // +4 to ignore "Nom:"
+    splitStr(my_word->details,':',&details_tab,&tabSize);
+    int n=0;
+    while (bool!=1 || n< strlen((my_word->details))){
+        if (my_word->details[n]=='+'){
+            bool=1;
+        }
+        n++;
+    }
+    if (bool==1||type==3){
+        for(int i=1;i<tabSize;i++) {
+            MagicNb= GenerateMagicNumber(details_tab[i],type);
+            temp1 = (*temp)->derives->head;
+
+            //Is my derivation list empty ?
+            if (temp1 == NULL) {
+                temp1 = CreateCell(my_word->word);
+                temp1->derive->magic_nbr = MagicNb;
+            }
+                // If not: is the derivation already in the list ?
+            else {
+                bool = 0;
+                //Is the derivation already in the list ?
+                while (temp1->next != NULL && bool != 1) {
+                    if (MagicNb == temp1->derive->magic_nbr){
+                        bool = 1;
+                    }
+                    temp1 = temp1->next;
+                }
+                //Add the derivation to the list if not exist
+                if (bool != 1) {
+                    temp2 = CreateCell(my_word->word);
+                    temp2->derive->magic_nbr = MagicNb;
+                    temp1->next = temp2;
+                    free(temp2);
+                }
+            }
+        }
+    }
+}
 
 /*Function which add n words to a subtree
  * n: nb words in dict (-1 for all)
  * type: 0 verb , 1 noun , 2 adj , 3 adv , -1 any type
 */
-void addword(p_root my_tree,p_dict_line my_word,int n, int type)
+void addword(p_root my_tree,p_dict_line my_word, int type)
 {
     switch(type){
         case 0:
         {
+            p_node* subtree = my_tree->node->next[0];
+            p_node* temp = subtree; //temp ptr to cross the subtree
+            createword(my_word,temp);
+            fillMNb(my_word, type, temp);
             break;
         }
         case 1:
@@ -218,13 +370,13 @@ void addword(p_root my_tree,p_dict_line my_word,int n, int type)
             for(int i=0;i<strlen(my_word->root);i++)
             {
                 my_letter = my_word->root[i];
-                if(temp==NULL ||((*temp)->next[which_index(my_letter)] == NULL) )
+                if((*temp)->next[which_index(my_letter)] == NULL)
                 {
                     result = CreateNode(my_letter);
                     (*temp)->next[which_index(my_letter)] = &result;
                 }
 
-                if(i<strlen(my_word->root)-1)
+                //if(i<strlen(my_word->root)-1)
                 temp = (*temp)->next[which_index(my_letter)];
             }
 
@@ -263,10 +415,18 @@ void addword(p_root my_tree,p_dict_line my_word,int n, int type)
         }
         case 2:
         {
+            p_node* subtree = my_tree->node->next[2];
+            p_node* temp = subtree; //temp ptr to cross the subtree
+            createword(my_word,temp);
+            fillMNb(my_word, type, temp);
             break;
         }
         case 3:
         {
+            p_node* subtree = my_tree->node->next[3];
+            p_node* temp = subtree; //temp ptr to cross the subtree
+            createword(my_word,temp);
+            fillMNb(my_word, type, temp);
             break;
         }
         case -1:

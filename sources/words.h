@@ -56,7 +56,10 @@ p_node CreateNode(char);
 p_cell CreateCell(char*);
 int which_index(char);
 int which_type(char*);
-p_mn GenerateMagicNumber(char*, int);
-void addword(p_root,p_dict_line,int,int);
+char* GenerateMagicNumber(char*, int);
+p_node findword(p_dict_line,p_root,int);
+void createword(p_dict_line,p_node*);
+void fillMNb(p_dict_line, int,p_node*);
+void addword(p_root,p_dict_line,int);
 
 #endif //PROJET_C_WORDS_H
