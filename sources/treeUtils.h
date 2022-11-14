@@ -8,9 +8,9 @@
 #include "words.h"
 
 
-root createEmptyTree();
+p_root createEmptyTree();
 //creation of the general tree
-p_node setupsubTree(char*);
-root setupTree(root);
+p_node setupsubTree(char);
+p_root setupTree();
 
 #endif //PROJET_C_TREEUTILS_H

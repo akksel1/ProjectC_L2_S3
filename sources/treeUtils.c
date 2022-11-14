@@ -4,31 +4,34 @@
 
 #include "treeUtils.h"
 
-root createEmptyTree()
+p_root createEmptyTree()
 {
-    root t;
-    t.node = NULL;
+    p_root t;
+    t = (p_root) malloc(sizeof(root));
+    t->node = CreateEmptyNode();
     return t;
 }
 // create each tree
-p_node setupsubTree(char* type){
+p_node setupsubTree(char type){
     p_node p;
     p=CreateEmptyNode();
     p->val=type;
     return p;
 }
 // set up general
-root setupTree(root t){
+p_root setupTree(){
+    p_root tree;
+    tree = createEmptyTree();
     p_node hub,verbe,nom,adjectif,adverbe;
-    hub=setupsubTree("hub");
-    verbe=setupsubTree("verbe");
-    nom=setupsubTree("nom");
-    adjectif=setupsubTree("adjectif");
-    adverbe=setupsubTree("adverbe");
-    hub->next[0]=&verbe;
-    hub->next[1]=&nom;
-    hub->next[2]=&adjectif;
-    hub->next[3]=&adverbe;
-    t.node=hub;
-    return t;
+    hub=setupsubTree('h');
+    verbe=setupsubTree('v');
+    nom=setupsubTree('n');
+    adjectif=setupsubTree('a');
+    adverbe=setupsubTree('A');
+    hub->next[0]=verbe;
+    hub->next[1]=nom;
+    hub->next[2]=adjectif;
+    hub->next[3]=adverbe;
+    tree->node=hub;
+    return tree;
 }

@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include "sources/words.h"
+#include "sources/treeUtils.h"
 #include "sources/fileUtils.h"
 #include "sources/stringUtils.h"
 #include <unistd.h>
+
 
 char* generate_dict_abs_path(char* relative_path){
     char abs_path[256];
@@ -87,12 +89,22 @@ int main() {
     free(lines);
     free(fpath);*/
     int size;
+    p_root my_tree=createEmptyTree();
+    my_tree = setupTree();
     p_dict_line* parsedDict = parseLines(&size);
     printf("%d lines parsed. \n", size);
-    int middle_line = 45221;
+    int middle_line = 45888;
     printf("Line %d is :\n", middle_line);
     printf("-Root : %s\n-Word : %s\n-Details : %s\n", parsedDict[middle_line]->root, parsedDict[middle_line]->word, parsedDict[middle_line]->details);
+    addword(&my_tree,parsedDict[middle_line], which_type(parsedDict[middle_line]->details));
+    p_node temp1,temp2;
+    int type = which_type(parsedDict[middle_line]->details);
+    /*temp1 = my_tree->node->next[1];
+    printf("nom : %c\n",temp1->val);
+    temp2 = temp1->next[2];
+    printf("c : %c\n",temp2->val);*/
 
+    findword_print(parsedDict[middle_line], my_tree, which_type(parsedDict[middle_line]->details));
     free(parsedDict);
     return 0;
 }

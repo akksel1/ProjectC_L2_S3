@@ -25,9 +25,14 @@ p_dict_line buildDictLine(char* line){
 // create an empty node with no character as a value which is not the end of a word, no letters after and no derive be careful
 p_node CreateEmptyNode(){
     p_node p;
-    p->val="";
+    p = (p_node) malloc(sizeof(node));
+    p->val='0';
     p->end=0;
-    memset(p->next,0,26);
+    //memset(p->next,0,26);
+    for(int i=0;i<26;i++)
+    {
+        p->next[i]=NULL;
+    }
     p->derives=NULL;
     return p;
 }
@@ -36,9 +41,10 @@ p_node CreateEmptyNode(){
 p_node CreateNode(char val)
 {
     p_node p = CreateEmptyNode();
-    p->val=&val;
+    p->val=val;
     return p;
 }
+
 
 //Function which assigns val to a cell
 p_cell CreateCell(char* my_str)
@@ -53,11 +59,13 @@ p_cell CreateCell(char* my_str)
 //Function which returns the index of a letter in the alphabet using ASCII code
 int which_index(char my_letter)
 {
-    if(my_letter>96 && my_letter<123)
-    return my_letter % 26;
-
-    else printf("error - unknown letter");{
-    return -1;}
+    if(my_letter>96 && my_letter<123){
+        return my_letter-97;
+    }
+    else {
+        printf("error - unknown letter\n");
+        return -1;
+    }
 }
 
 //Function which returns the type number of a word
@@ -272,6 +280,58 @@ p_node findword(p_dict_line my_word,p_root my_tree,int type){
     return *temp;
 }
 
+p_node findword_print(p_dict_line my_word,p_root my_tree,int type){
+    p_node subtree = my_tree->node->next[type];
+    p_node temp = subtree; //temp ptr to cross the subtree
+    char my_letter,temp_char;
+    //Loop to cross the subtree & add nodes
+    for(int i=0;i<=strlen(my_word->root);i++)
+    {
+        my_letter = my_word->root[i];
+        if(i==0){
+            switch(type){
+                case 0:{
+                    printf("TYPE: VERB\n");
+                    break;
+                }
+                case 1:{
+                    printf("TYPE: NOUN\n");
+                    break;
+                }
+                case 2:{
+                    printf("TYPE: ADJECTIVE\n");
+                    break;
+                }
+                case 3:{
+                    printf("TYPE: ADVERB\n");
+                    break;
+                }
+                default:printf("KK");
+            }
+        }
+        else{
+            printf("Letter: %c\n",temp->val);
+        }
+
+
+        printf("| ");
+        for(int j=0;j<26;j++)
+        {
+            if(temp->next[j]==NULL){
+                printf("0 |");
+            }
+            else{
+                printf("%c |",temp->next[j]->val);
+            }
+        }
+        printf("\n");
+        if(i<strlen(my_word->root)){
+            temp = temp->next[which_index(my_letter)];
+        }
+    }
+
+    return temp;
+}
 
 void createword(p_dict_line my_word,p_node* temp){
     p_node result;
@@ -343,12 +403,12 @@ void fillMNb(p_dict_line my_word, int type,p_node* temp){
  * n: nb words in dict (-1 for all)
  * type: 0 verb , 1 noun , 2 adj , 3 adv , -1 any type
 */
-void addword(p_root my_tree,p_dict_line my_word, int type)
+void addword(p_root* my_tree,p_dict_line my_word, int type)
 {
     switch(type){
         case 0:
         {
-            p_node* subtree = my_tree->node->next[0];
+            p_node* subtree = (*my_tree)->node->next[0];
             p_node* temp = subtree; //temp ptr to cross the subtree
             createword(my_word,temp);
             fillMNb(my_word, type, temp);
@@ -356,28 +416,31 @@ void addword(p_root my_tree,p_dict_line my_word, int type)
         }
         case 1:
         {
-            p_node* subtree = my_tree->node->next[1];
-            p_node* temp = subtree; //temp ptr to cross the subtree
+            p_node subtree = (*my_tree)->node->next[1];
+            p_node temp = subtree; //temp ptr to cross the subtree
             p_cell temp1,temp2; //temp ptrs to cross the derivation list
             p_node result;
+            p_node temp3;
             char my_letter;
             char* MagicNb;
             int tabSize;
             char** details_tab;
             int bool=0;
-
-            //Loop to cross the subtree & add nodes
+            //Loop to cross the subtree & add nodes (OK)
             for(int i=0;i<strlen(my_word->root);i++)
             {
                 my_letter = my_word->root[i];
-                if((*temp)->next[which_index(my_letter)] == NULL)
+                //OK
+
+                if(temp->next[which_index(my_letter)] == NULL)
                 {
                     result = CreateNode(my_letter);
-                    (*temp)->next[which_index(my_letter)] = &result;
+                    //printf("%c",result->val[0]);
+                    temp->next[which_index(my_letter)] = result;
                 }
 
-                //if(i<strlen(my_word->root)-1)
-                temp = (*temp)->next[which_index(my_letter)];
+                //OK
+                temp = temp->next[which_index(my_letter)];
             }
 
             //Creation of the array of details
@@ -385,7 +448,7 @@ void addword(p_root my_tree,p_dict_line my_word, int type)
             splitStr(my_word->details+4,':',&details_tab,&tabSize);
             for(int i=0;i<tabSize;i++) {
                 MagicNb= GenerateMagicNumber(details_tab[i],type);
-                temp1 = (*temp)->derives->head;
+                temp1 = temp->derives->head;
 
                 //Is my derivation list empty ?
                 if (temp1 == NULL) {
@@ -415,7 +478,7 @@ void addword(p_root my_tree,p_dict_line my_word, int type)
         }
         case 2:
         {
-            p_node* subtree = my_tree->node->next[2];
+            p_node* subtree = (*my_tree)->node->next[2];
             p_node* temp = subtree; //temp ptr to cross the subtree
             createword(my_word,temp);
             fillMNb(my_word, type, temp);
@@ -423,7 +486,7 @@ void addword(p_root my_tree,p_dict_line my_word, int type)
         }
         case 3:
         {
-            p_node* subtree = my_tree->node->next[3];
+            p_node* subtree = (*my_tree)->node->next[3];
             p_node* temp = subtree; //temp ptr to cross the subtree
             createword(my_word,temp);
             fillMNb(my_word, type, temp);
