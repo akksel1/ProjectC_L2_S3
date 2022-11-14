@@ -59,8 +59,8 @@ int which_type(char*);
 char* GenerateMagicNumber(char*, int);
 p_node findword(p_dict_line,p_root,int);
 p_node findword_print(p_dict_line,p_root,int);
-void createword(p_dict_line,p_node*);
-void fillMNb(p_dict_line, int,p_node*);
+void createword(p_dict_line,p_node);
+void fillMNb(p_dict_line, int,p_node);
 void addword(p_root*,p_dict_line,int);
 
 #endif //PROJET_C_WORDS_H

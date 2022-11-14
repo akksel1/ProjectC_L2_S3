@@ -333,25 +333,25 @@ p_node findword_print(p_dict_line my_word,p_root my_tree,int type){
     return temp;
 }
 
-void createword(p_dict_line my_word,p_node* temp){
+void createword(p_dict_line my_word,p_node temp){
     p_node result;
     char my_letter;
     //Loop to cross the subtree & add nodes
     for(int i=0;i<strlen(my_word->root);i++)
     {
         my_letter = my_word->root[i];
-        if(temp==NULL ||((*temp)->next[which_index(my_letter)] == NULL) )
+        if(temp==NULL ||(temp->next[which_index(my_letter)] == NULL) )
         {
             result = CreateNode(my_letter);
-            (*temp)->next[which_index(my_letter)] = &result;
+            temp->next[which_index(my_letter)] = result;
         }
 
         if(i<strlen(my_word->root)-1)
-            temp = (*temp)->next[which_index(my_letter)];
+            temp = temp->next[which_index(my_letter)];
     }
 }
 
-void fillMNb(p_dict_line my_word, int type,p_node* temp){
+void fillMNb(p_dict_line my_word, int type,p_node temp){
     p_cell temp1,temp2; //temp ptrs to cross the derivation list
     char* MagicNb;
     int tabSize;
@@ -370,7 +370,7 @@ void fillMNb(p_dict_line my_word, int type,p_node* temp){
     if (bool==1||type==3){
         for(int i=1;i<tabSize;i++) {
             MagicNb= GenerateMagicNumber(details_tab[i],type);
-            temp1 = (*temp)->derives->head;
+            temp1 = temp->derives->head;
 
             //Is my derivation list empty ?
             if (temp1 == NULL) {
@@ -408,10 +408,10 @@ void addword(p_root* my_tree,p_dict_line my_word, int type)
     switch(type){
         case 0:
         {
-            p_node* subtree = (*my_tree)->node->next[0];
-            p_node* temp = subtree; //temp ptr to cross the subtree
+            p_node subtree = (*my_tree)->node->next[0];
+            p_node temp = subtree; //temp ptr to cross the subtree
             createword(my_word,temp);
-            fillMNb(my_word, type, temp);
+            //fillMNb(my_word, type, temp); (to fix)
             break;
         }
         case 1:
@@ -478,18 +478,18 @@ void addword(p_root* my_tree,p_dict_line my_word, int type)
         }
         case 2:
         {
-            p_node* subtree = (*my_tree)->node->next[2];
-            p_node* temp = subtree; //temp ptr to cross the subtree
+            p_node subtree = (*my_tree)->node->next[2];
+            p_node temp = subtree; //temp ptr to cross the subtree
             createword(my_word,temp);
-            fillMNb(my_word, type, temp);
+            //fillMNb(my_word, type, temp); to fix later
             break;
         }
         case 3:
         {
-            p_node* subtree = (*my_tree)->node->next[3];
-            p_node* temp = subtree; //temp ptr to cross the subtree
+            p_node subtree = (*my_tree)->node->next[3];
+            p_node temp = subtree; //temp ptr to cross the subtree
             createword(my_word,temp);
-            fillMNb(my_word, type, temp);
+            //fillMNb(my_word, type, temp); to fix later
             break;
         }
         case -1:
