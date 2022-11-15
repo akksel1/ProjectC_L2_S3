@@ -6,6 +6,7 @@
 #include <unistd.h>
 
 
+
 char* generate_dict_abs_path(char* relative_path){
     char abs_path[256];
     getcwd(abs_path, 256);
@@ -40,7 +41,7 @@ char* generate_dict_abs_path(char* relative_path){
 }
 
 p_dict_line* parseLines(int* tabsize){
-    char* fpath = generate_dict_abs_path("sources\\dico.txt");
+    char* fpath = "C:\\Users\\akksel\\CLionProjects\\ProjectC_L2_S3\\sources\\dico.txt";
     char** lines;
     int size;
     *(tabsize) = 0;
@@ -68,43 +69,42 @@ p_dict_line* parseLines(int* tabsize){
 }
 
 int main() {
-    /*char* fpath = generate_dict_abs_path("sources\\dico.txt");
-    char** lines;
-    int size;
-    int result = readFile(fpath, &lines, &size);
-    if(result){
-        int t_s;
-        char** t;
-        char* middle_line = lines[size/2];
-        printf("We have %d lines \n", size);
-        printf("Middle Line (l %d) is  : %s \n", size-1/2, middle_line);
-        splitStr(middle_line, '\t', &t, &t_s);
-        if (t_s){
-            printf("splitted in :\n");
-            for (int i = 0; i < t_s; i++){
-                printf("%s\n", t[i]);
-            }
-        }
-    }
-    free(lines);
-    free(fpath);*/
     int size;
     p_root my_tree=createEmptyTree();
     my_tree = setupTree();
     p_dict_line* parsedDict = parseLines(&size);
-    printf("%d lines parsed. \n", size);
-    int middle_line = 45888;
-    printf("Line %d is :\n", middle_line);
-    printf("-Root : %s\n-Word : %s\n-Details : %s\n", parsedDict[middle_line]->root, parsedDict[middle_line]->word, parsedDict[middle_line]->details);
-    addword(&my_tree,parsedDict[middle_line], which_type(parsedDict[middle_line]->details));
-    p_node temp1,temp2;
-    int type = which_type(parsedDict[middle_line]->details);
-    /*temp1 = my_tree->node->next[1];
-    printf("nom : %c\n",temp1->val);
-    temp2 = temp1->next[2];
-    printf("c : %c\n",temp2->val);*/
+    int choice;
+    int stop =0;
+    int middle_line;
 
-    findword_print(parsedDict[middle_line], my_tree, which_type(parsedDict[middle_line]->details));
+    while(stop==0) {
+        printf("\n\n\t\t\t-- MAIN MENU --\n1 - Extract a word from the dictionary\n2 - Add a word to the tree\n3 - Quit");
+        scanf("%d",&choice);
+        switch (choice) {
+            case (1): {
+                printf("%d lines parsed. \n", size);
+                middle_line = 9388;
+                printf("Line %d is :\n", middle_line);
+                printf("-Root : %s\n-Word : %s\n-Details : %s\n", parsedDict[middle_line]->root,
+                       parsedDict[middle_line]->word, parsedDict[middle_line]->details);
+                break;
+            }
+            case (2): {
+                middle_line = 9388;
+                printf("-Root : %s\n-Word : %s\n-Details : %s\n", parsedDict[middle_line]->root,parsedDict[middle_line]->word, parsedDict[middle_line]->details);
+                addword(&my_tree, parsedDict[middle_line], which_type(parsedDict[middle_line]->details));
+                findword_print(parsedDict[middle_line], my_tree, which_type(parsedDict[middle_line]->details));
+                break;
+            }
+            case(3):
+            {
+                stop=1;
+            }
+            default:
+                printf("Erreur");
+        }
+
+    }
     free(parsedDict);
     return 0;
 }

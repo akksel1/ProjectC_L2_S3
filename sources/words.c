@@ -21,6 +21,17 @@ p_dict_line buildDictLine(char* line){
     }
 }
 
+p_cell CreateEmptyCell(){
+    p_cell my_cell;
+    my_cell = NULL;
+    return my_cell;
+}
+
+p_list CreateEmptyList(){
+    p_list my_list=(p_list)malloc(sizeof(t_list));
+    my_list->head = CreateEmptyCell();
+    return my_list;
+}
 
 // create an empty node with no character as a value which is not the end of a word, no letters after and no derive be careful
 p_node CreateEmptyNode(){
@@ -42,14 +53,16 @@ p_node CreateNode(char val)
 {
     p_node p = CreateEmptyNode();
     p->val=val;
+    p->derives=CreateEmptyList();
     return p;
 }
+
 
 
 //Function which assigns val to a cell
 p_cell CreateCell(char* my_str)
 {
-    p_cell p;
+    p_cell p=(p_cell)malloc(sizeof(cell));
     p->derive->value = my_str;
     p->next=NULL;
     return p;
@@ -265,19 +278,19 @@ char* GenerateMagicNumber(char* derive_type, int type)
 }
 
 p_node findword(p_dict_line my_word,p_root my_tree,int type){
-    p_node* subtree = my_tree->node->next[type];
-    p_node* temp = subtree; //temp ptr to cross the subtree
+    p_node subtree = my_tree->node->next[type];
+    p_node temp = subtree; //temp ptr to cross the subtree
     char my_letter;
     //Loop to cross the subtree & add nodes
     for(int i=0;i<strlen(my_word->root);i++)
     {
         my_letter = my_word->root[i];
-        if ((*temp)->next[which_index(my_letter)] == NULL){
+        if (temp->next[which_index(my_letter)] == NULL){
             return NULL;
         }
-        temp = (*temp)->next[which_index(my_letter)];
+        temp = temp->next[which_index(my_letter)];
     }
-    return *temp;
+    return temp;
 }
 
 p_node findword_print(p_dict_line my_word,p_root my_tree,int type){
@@ -358,23 +371,32 @@ void fillMNb(p_dict_line my_word, int type,p_node temp){
     char** details_tab;
     int bool=0;
     //Creation of the array of details
-    // +4 to ignore "Nom:"
+
     splitStr(my_word->details,':',&details_tab,&tabSize);
+    // If tabSize =O => it means it's an adv
+    if(tabSize==0){
+        details_tab[0]="Adv";
+    }
+
     int n=0;
-    while (bool!=1 || n< strlen((my_word->details))){
+    while (bool!=1 && n<strlen((my_word->details))){
         if (my_word->details[n]=='+'){
             bool=1;
         }
         n++;
     }
+
     if (bool==1||type==3){
         for(int i=1;i<tabSize;i++) {
             MagicNb= GenerateMagicNumber(details_tab[i],type);
+            printf("generate ok\n");
             temp1 = temp->derives->head;
 
             //Is my derivation list empty ?
             if (temp1 == NULL) {
+                printf("if ok\n");
                 temp1 = CreateCell(my_word->word);
+                printf("createcell ok\n");
                 temp1->derive->magic_nbr = MagicNb;
             }
                 // If not: is the derivation already in the list ?
@@ -411,7 +433,7 @@ void addword(p_root* my_tree,p_dict_line my_word, int type)
             p_node subtree = (*my_tree)->node->next[0];
             p_node temp = subtree; //temp ptr to cross the subtree
             createword(my_word,temp);
-            //fillMNb(my_word, type, temp); (to fix)
+            //fillMNb(my_word, type, temp);
             break;
         }
         case 1:
@@ -446,12 +468,16 @@ void addword(p_root* my_tree,p_dict_line my_word, int type)
             //Creation of the array of details
             // +4 to ignore "Nom:"
             splitStr(my_word->details+4,':',&details_tab,&tabSize);
+            printf("split nom ok et tabsize = %d",tabSize);
             for(int i=0;i<tabSize;i++) {
                 MagicNb= GenerateMagicNumber(details_tab[i],type);
-                temp1 = temp->derives->head;
+                printf("MNB nom ok");
+                //temp1 = temp->derives->head;
 
+                temp1 = NULL;
                 //Is my derivation list empty ?
                 if (temp1 == NULL) {
+                    printf("if nom ok");
                     temp1 = CreateCell(my_word->word);
                     temp1->derive->magic_nbr = MagicNb;
                 }
@@ -481,7 +507,7 @@ void addword(p_root* my_tree,p_dict_line my_word, int type)
             p_node subtree = (*my_tree)->node->next[2];
             p_node temp = subtree; //temp ptr to cross the subtree
             createword(my_word,temp);
-            //fillMNb(my_word, type, temp); to fix later
+            //fillMNb(my_word, type, temp);
             break;
         }
         case 3:
@@ -489,7 +515,7 @@ void addword(p_root* my_tree,p_dict_line my_word, int type)
             p_node subtree = (*my_tree)->node->next[3];
             p_node temp = subtree; //temp ptr to cross the subtree
             createword(my_word,temp);
-            //fillMNb(my_word, type, temp); to fix later
+            //fillMNb(my_word, type, temp);
             break;
         }
         case -1:

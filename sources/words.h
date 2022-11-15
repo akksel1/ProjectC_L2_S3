@@ -52,6 +52,8 @@ typedef struct s_root{
 
 p_dict_line buildDictLine(char* line);
 p_node CreateEmptyNode();
+p_cell CreateEmptyCell();
+p_list CreateEmptyList();
 p_node CreateNode(char);
 p_cell CreateCell(char*);
 int which_index(char);
