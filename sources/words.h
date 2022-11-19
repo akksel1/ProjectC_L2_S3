@@ -35,6 +35,7 @@ typedef struct s_cell cell, *p_cell;
 typedef struct s_list
 {
     p_cell head;
+    int size;
 } t_list, *p_list;
 
 //here

@@ -62,8 +62,11 @@ p_node CreateNode(char val)
 //Function which assigns val to a cell
 p_cell CreateCell(char* my_str)
 {
+    printf("enter in function\n");
     p_cell p=(p_cell)malloc(sizeof(cell));
+    printf("malloc cell ok\n");
     p->derive->value = my_str;
+    printf("= ok \n");
     p->next=NULL;
     return p;
 }
@@ -76,7 +79,6 @@ int which_index(char my_letter)
         return my_letter-97;
     }
     else {
-        printf("error - unknown letter\n");
         return -1;
     }
 }
@@ -198,7 +200,7 @@ char* GenerateMagicNumber(char* derive_type, int type)
                 gender[i] = derive_type[i];
                 i++;
             }
-
+            i++; //to avoid the +
             while(derive_type[i]!='\0')
             {
                 nb[i] = derive_type[i];
@@ -337,7 +339,8 @@ p_node findword_print(p_dict_line my_word,p_root my_tree,int type){
                 printf("%c |",temp->next[j]->val);
             }
         }
-        printf("\n");
+        printf("\n\n");
+        //sleep(1);
         if(i<strlen(my_word->root)){
             temp = temp->next[which_index(my_letter)];
         }
@@ -349,18 +352,20 @@ p_node findword_print(p_dict_line my_word,p_root my_tree,int type){
 void createword(p_dict_line my_word,p_node temp){
     p_node result;
     char my_letter;
+    int temp2;
     //Loop to cross the subtree & add nodes
-    for(int i=0;i<strlen(my_word->root);i++)
-    {
+    for(int i=0;i<strlen(my_word->root);i++) {
         my_letter = my_word->root[i];
-        if(temp==NULL ||(temp->next[which_index(my_letter)] == NULL) )
-        {
-            result = CreateNode(my_letter);
-            temp->next[which_index(my_letter)] = result;
-        }
+        temp2 = which_index(my_letter);
+        if (temp2 != -1) {
+            if (temp == NULL || (temp->next[which_index(my_letter)] == NULL)) {
+                result = CreateNode(my_letter);
+                temp->next[which_index(my_letter)] = result;
+            }
 
-        if(i<strlen(my_word->root)-1)
-            temp = temp->next[which_index(my_letter)];
+            if (i < strlen(my_word->root) - 1)
+                temp = temp->next[which_index(my_letter)];
+        }
     }
 }
 
@@ -445,41 +450,46 @@ void addword(p_root* my_tree,p_dict_line my_word, int type)
             p_node temp3;
             char my_letter;
             char* MagicNb;
-            int tabSize;
+            int tabSize,temp4;
             char** details_tab;
             int bool=0;
+            int bool2;
             //Loop to cross the subtree & add nodes (OK)
             for(int i=0;i<strlen(my_word->root);i++)
             {
                 my_letter = my_word->root[i];
                 //OK
+                temp4 = which_index(my_letter);
+                if(temp4!=-1) {
 
-                if(temp->next[which_index(my_letter)] == NULL)
-                {
-                    result = CreateNode(my_letter);
-                    //printf("%c",result->val[0]);
-                    temp->next[which_index(my_letter)] = result;
+
+                    if (temp->next[which_index(my_letter)] == NULL) {
+                        result = CreateNode(my_letter);
+                        //printf("%c",result->val[0]);
+                        temp->next[which_index(my_letter)] = result;
+                    }
+
+                    //OK
+                    temp = temp->next[which_index(my_letter)];
                 }
-
-                //OK
-                temp = temp->next[which_index(my_letter)];
             }
-
             //Creation of the array of details
             // +4 to ignore "Nom:"
-            splitStr(my_word->details+4,':',&details_tab,&tabSize);
+            splitStr(my_word->details,':',&details_tab,&tabSize);
             printf("split nom ok et tabsize = %d",tabSize);
-            for(int i=0;i<tabSize;i++) {
+            for(int i=1;i<tabSize;i++) {
                 MagicNb= GenerateMagicNumber(details_tab[i],type);
-                printf("MNB nom ok");
+                printf("MNB nom ok: %s",MagicNb);
                 //temp1 = temp->derives->head;
 
                 temp1 = NULL;
                 //Is my derivation list empty ?
                 if (temp1 == NULL) {
-                    printf("if nom ok");
+                    printf("if nom ok\n");
                     temp1 = CreateCell(my_word->word);
+                    printf("create cell ok\n");
                     temp1->derive->magic_nbr = MagicNb;
+                    printf("fill mnbr ok\n");
                 }
                 // If not: is the derivation already in the list ?
                 else {
@@ -500,6 +510,7 @@ void addword(p_root* my_tree,p_dict_line my_word, int type)
                     }
                 }
             }
+
             break;
         }
         case 2:

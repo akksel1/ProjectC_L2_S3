@@ -70,35 +70,64 @@ p_dict_line* parseLines(int* tabsize){
 
 int main() {
     int size;
+    char* word;
+    word = (char*) malloc(sizeof(char)*25);
     p_root my_tree=createEmptyTree();
     my_tree = setupTree();
     p_dict_line* parsedDict = parseLines(&size);
-    int choice;
+    p_dict_line my_word = (p_dict_line) malloc(sizeof(dict_line));
+    int choice,type;
     int stop =0;
     int middle_line;
 
     while(stop==0) {
-        printf("\n\n\t\t\t-- MAIN MENU --\n1 - Extract a word from the dictionary\n2 - Add a word to the tree\n3 - Quit");
+        printf("\n\n\t-- MAIN MENU --\n\n1 - Extract a word from the dictionary\n2 - Add a word to the tree\n3 - Add n words\n4 - Display a word\n5- Quit\nEnter:"
+        );
         scanf("%d",&choice);
         switch (choice) {
             case (1): {
                 printf("%d lines parsed. \n", size);
-                middle_line = 9388;
+                printf("Give a number <%d:",size);
+                scanf("%d",&middle_line);
+                if(middle_line>size)
+                {
+
+                }
                 printf("Line %d is :\n", middle_line);
                 printf("-Root : %s\n-Word : %s\n-Details : %s\n", parsedDict[middle_line]->root,
                        parsedDict[middle_line]->word, parsedDict[middle_line]->details);
+                sleep(2);
                 break;
             }
             case (2): {
-                middle_line = 9388;
+                printf("Give a number < %d:",size);
+                scanf("%d",&middle_line);
                 printf("-Root : %s\n-Word : %s\n-Details : %s\n", parsedDict[middle_line]->root,parsedDict[middle_line]->word, parsedDict[middle_line]->details);
                 addword(&my_tree, parsedDict[middle_line], which_type(parsedDict[middle_line]->details));
                 findword_print(parsedDict[middle_line], my_tree, which_type(parsedDict[middle_line]->details));
+
+                sleep(2);
                 break;
             }
             case(3):
             {
+                fillTree(&my_tree,parsedDict,287977,size);
+                break;
+            }
+            case(4):
+            {
+                printf("Saisir le mot que vous souhaitez affficher puis type:");
+                scanf("%s",word);
+                scanf("%d",&type);
+                my_word->root=word;
+                printf("type: %d\n",type);
+                findword_print(my_word,my_tree,type);
+                break;
+            }
+            case(5):
+            {
                 stop=1;
+                break;
             }
             default:
                 printf("Erreur");

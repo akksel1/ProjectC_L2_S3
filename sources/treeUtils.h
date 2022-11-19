@@ -6,11 +6,14 @@
 #define PROJET_C_TREEUTILS_H
 
 #include "words.h"
+#include <time.h>
+#include <stdlib.h>
 
 
 p_root createEmptyTree();
 //creation of the general tree
 p_node setupsubTree(char);
 p_root setupTree();
+void fillTree(p_root*,p_dict_line*,int,int);
 
 #endif //PROJET_C_TREEUTILS_H
