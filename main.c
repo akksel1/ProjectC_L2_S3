@@ -69,7 +69,7 @@ p_dict_line* parseLines(int* tabsize){
 }
 
 int main() {
-    int size;
+    int size,nb;
     char* word;
     word = (char*) malloc(sizeof(char)*25);
     p_root my_tree=createEmptyTree();
@@ -81,9 +81,14 @@ int main() {
     int middle_line;
 
     while(stop==0) {
-        printf("\n\n\t-- MAIN MENU --\n\n1 - Extract a word from the dictionary\n2 - Add a word to the tree\n3 - Add n words\n4 - Display a word\n5- Quit\nEnter:"
+        printf("\n\n\t-- MAIN MENU --\n\n1 - Extract a word from the dictionary\n2 - Add a word to the tree\n3 - Add n words from the dictionary\n4 - Display a word\n5- Quit\nEnter:"
         );
         scanf("%d",&choice);
+        while(choice>5||choice<1)
+        {
+            printf("Error\nRe-enter:");
+            scanf("%d",&choice);
+        }
         switch (choice) {
             case (1): {
                 printf("%d lines parsed. \n", size);
@@ -111,7 +116,14 @@ int main() {
             }
             case(3):
             {
-                fillTree(&my_tree,parsedDict,500,size);
+                printf("\nHow many words do you want to add ?(Max: %d)\nEnter:",5000);
+                scanf("%d",&nb);
+                while(nb>5000||nb<1)
+                {
+                    printf("Error\nRe-enter:");
+                    scanf("%d",&nb);
+                }
+                fillTree(&my_tree,parsedDict,nb,size);
                 break;
             }
             case(4):
