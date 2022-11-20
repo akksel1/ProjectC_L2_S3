@@ -38,7 +38,7 @@ p_root setupTree(){
 
 //Fill the tree with n random words from the dictionary
 //n should be < size when you call fillTree in main
-void fillTree(p_root* my_tree,p_dict_line* my_dico,int n,int size)
+p_root fillTree(p_root* my_tree,p_dict_line* my_dico,int n,int size)
 {
     int random_line,cpt=0;
     time_t t;
@@ -48,8 +48,9 @@ void fillTree(p_root* my_tree,p_dict_line* my_dico,int n,int size)
         random_line=rand()%size;
         printf("We added: %s %d\n",my_dico[random_line]->root, which_type(my_dico[random_line]->details));
         //Add this word to the right subtree
-        addword(my_tree, my_dico[random_line], which_type(my_dico[random_line]->details));
+        my_tree = addword(my_tree, my_dico[random_line], which_type(my_dico[random_line]->details));
     }
+    return (*my_tree);
 }
 
 char* findwordoftype(p_root my_tree,int type){

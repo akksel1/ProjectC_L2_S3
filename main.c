@@ -41,7 +41,8 @@ char* generate_dict_abs_path(char* relative_path){
 }
 
 p_dict_line* parseLines(int* tabsize){
-    char* fpath = generate_dict_abs_path("/sources/dico.txt");
+    //If 0 lines, please replace by your absolute path.
+    char* fpath = "C:\\Users\\akksel\\CLionProjects\\ProjectC_L2_S3\\sources\\dico.txt";
     char** lines;
     int size;
     *(tabsize) = 0;
@@ -109,31 +110,28 @@ int main() {
                 scanf("%d",&middle_line);
                 printf("-Root : %s\n-Word : %s\n-Details : %s\n", parsedDict[middle_line]->root,parsedDict[middle_line]->word, parsedDict[middle_line]->details);
                 addword(&my_tree, parsedDict[middle_line], which_type(parsedDict[middle_line]->details));
-                findword_print(parsedDict[middle_line], my_tree, which_type(parsedDict[middle_line]->details));
-
+                findword_print(parsedDict[middle_line], my_tree);
                 sleep(2);
                 break;
             }
             case(3):
             {
-                printf("\nHow many words do you want to add ?(Max: %d)\nEnter:",5000);
+                printf("\nHow many words do you want to add ?(Max: %d)\nEnter:",size);
                 scanf("%d",&nb);
-                while(nb>5000||nb<1)
+                while(nb>size||nb<1)
                 {
                     printf("Error\nRe-enter:");
                     scanf("%d",&nb);
                 }
-                fillTree(&my_tree,parsedDict,nb,size);
+                my_tree = fillTree(&my_tree,parsedDict,nb,size);
                 break;
             }
             case(4):
             {
-                printf("Saisir le mot que vous souhaitez affficher:");
+                printf("Enter the word you want to add:");
                 scanf("%s",word);
-                scanf("%d",&type);
                 my_word->root=word;
-                printf("type: %d\n",type);
-                findword_print(my_word,my_tree,type);
+                findword_print(my_word,my_tree);
                 break;
             }
             case(5):
