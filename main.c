@@ -46,6 +46,7 @@ p_dict_line* parseLines(int* tabsize){
     char** lines;
     int size;
     *(tabsize) = 0;
+    
     int result = readFile(fpath, &lines, &size);
     printf("There are %d lines in the dict \n", size);
     if (result) {
