@@ -81,10 +81,10 @@ int main() {
     int middle_line;
 
     while(stop==0) {
-        printf("\n\n\t-- MAIN MENU --\n\n1 - Extract a word from the dictionary\n2 - Add a word to the tree\n3 - Add n words from the dictionary\n4 - Display a word\n5- Quit\nEnter:"
+        printf("\n\n\t-- MAIN MENU --\n\n1 - Extract a word from the dictionary\n2 - Add a word to the tree\n3 - Add words from the dictionary\n4 - Display a word\n5- Generate a sentence\n6- Quit\nEnter:"
         );
         scanf("%d",&choice);
-        while(choice>5||choice<1)
+        while(choice>6||choice<1)
         {
             printf("Error\nRe-enter:");
             scanf("%d",&choice);
@@ -128,7 +128,7 @@ int main() {
             }
             case(4):
             {
-                printf("Saisir le mot que vous souhaitez affficher puis type:");
+                printf("Saisir le mot que vous souhaitez affficher:");
                 scanf("%s",word);
                 scanf("%d",&type);
                 my_word->root=word;
@@ -137,6 +137,38 @@ int main() {
                 break;
             }
             case(5):
+            {
+                printf("\n1 - A full sentence using the roots\n2 - A full sentence using derives\n3: Go back\nEnter:");
+                scanf("%d",&choice);
+                while(choice>3||choice<1)
+                {
+                    printf("Error\nRe-enter:");
+                    scanf("%d",&choice);
+                }
+                switch(choice)
+                {
+                    case 1:
+                    {
+                        printf("Which type ? Enter:");
+                        scanf("%d",&type);
+                        printf("Mot: %s",findwordoftype(my_tree,type));
+                        break;
+                    }
+                    case 2:
+                    {
+                        printf("\nNot available yet ... stay tuned\n");
+                        break;
+                    }
+                    case 3:
+                    {
+                        break;
+                    }
+                    default:printf("Error");
+                }
+
+                break;
+            }
+            case(6):
             {
                 stop=1;
                 break;
