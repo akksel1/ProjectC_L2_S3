@@ -22,14 +22,15 @@ p_dict_line buildDictLine(char* line){
 }
 
 p_cell CreateEmptyCell(){
-    p_cell my_cell;
-    my_cell = NULL;
+    p_cell my_cell = (p_cell) malloc(sizeof(cell));
+    my_cell->derive = (p_word) malloc(sizeof(word));
+    my_cell->next=NULL;
     return my_cell;
 }
 
 p_list CreateEmptyList(){
     p_list my_list=(p_list)malloc(sizeof(t_list));
-    my_list->head = CreateEmptyCell();
+    my_list->head = NULL;
     return my_list;
 }
 
@@ -44,7 +45,7 @@ p_node CreateEmptyNode(){
     {
         p->next[i]=NULL;
     }
-    p->derives=NULL;
+    p->derives=CreateEmptyList();
     return p;
 }
 
@@ -53,7 +54,6 @@ p_node CreateNode(char val)
 {
     p_node p = CreateEmptyNode();
     p->val=val;
-    p->derives=CreateEmptyList();
     return p;
 }
 
@@ -62,11 +62,8 @@ p_node CreateNode(char val)
 //Function which assigns val to a cell
 p_cell CreateCell(char* my_str)
 {
-    printf("enter in function\n");
-    p_cell p=(p_cell)malloc(sizeof(cell));
-    printf("malloc cell ok\n");
+    p_cell p=CreateEmptyCell();
     p->derive->value = my_str;
-    printf("= ok \n");
     p->next=NULL;
     return p;
 }
@@ -132,29 +129,22 @@ char* GenerateMagicNumber(char* derive_type, int type)
                 i++;
             }
             i++;
+            int j=0;
             while(derive_type[i]!='+')
             {
-                nb[i] = derive_type[i];
+                nb[j] = derive_type[i];
                 i++;
+                j++;
             }
             i++;
-            while(derive_type[i]!='\0')
+            int n=0;
+            while(n<2)
             {
-                pers[i] = derive_type[i];
+                pers[n] = derive_type[i];
                 i++;
+                n++;
             }
-            if(strcmp(pers,"P1")==0)
-            {
-                MagicNumber[3]='0';
-            }
-            if(strcmp(pers,"P2")==0)
-            {
-                MagicNumber[3]='1';
-            }
-            if(strcmp(pers,"P3")==0)
-            {
-                MagicNumber[3]='2';
-            }
+
             if(strcmp(tense,"IPre")==0)
             {
                 MagicNumber[1]='0';
@@ -175,7 +165,6 @@ char* GenerateMagicNumber(char* derive_type, int type)
                 }
 
             }
-
             if(strcmp(nb,"SG")==0)
             {
                 MagicNumber[2]='0';
@@ -183,6 +172,18 @@ char* GenerateMagicNumber(char* derive_type, int type)
             if(strcmp(nb,"PL")==0)
             {
                 MagicNumber[2]='1';
+            }
+            if(strcmp(pers,"P1")==0)
+            {
+                MagicNumber[3]='0';
+            }
+            if(strcmp(pers,"P2")==0)
+            {
+                MagicNumber[3]='1';
+            }
+            if(strcmp(pers,"P3")==0)
+            {
+                MagicNumber[3]='2';
             }
             break;
         }
@@ -201,10 +202,12 @@ char* GenerateMagicNumber(char* derive_type, int type)
                 i++;
             }
             i++; //to avoid the +
-            while(derive_type[i]!='\0')
+            int n=0;
+            while(n<2)
             {
-                nb[i] = derive_type[i];
+                nb[n] = derive_type[i];
                 i++;
+                n++;
             }
             if(strcmp(gender,"Mas")==0)
             {
@@ -220,11 +223,11 @@ char* GenerateMagicNumber(char* derive_type, int type)
             }
             if(strcmp(nb,"SG")==0)
             {
-                MagicNumber[1]='0';
+                MagicNumber[2]='0';
             }
             if(strcmp(nb,"PL")==0)
             {
-                MagicNumber[1]='1';
+                MagicNumber[2]='1';
             }
             break;
         }
@@ -242,11 +245,13 @@ char* GenerateMagicNumber(char* derive_type, int type)
                 gender[i] = derive_type[i];
                 i++;
             }
-
-            while(derive_type[i]!='\0')
+            i++;
+            int n=0;
+            while(n<2)
             {
-                nb[i] = derive_type[i];
+                nb[n] = derive_type[i];
                 i++;
+                n++;
             }
             if(strcmp(gender,"Mas")==0)
             {
@@ -262,11 +267,11 @@ char* GenerateMagicNumber(char* derive_type, int type)
             }
             if(strcmp(nb,"SG")==0)
             {
-                MagicNumber[1]='0';
+                MagicNumber[2]='0';
             }
             if(strcmp(nb,"PL")==0)
             {
-                MagicNumber[1]='1';
+                MagicNumber[2]='1';
             }
             break;
         }
@@ -369,47 +374,52 @@ void createword(p_dict_line my_word,p_node temp){
     }
 }
 
-void fillMNb(p_dict_line my_word, int type,p_node temp){
-    p_cell temp1,temp2; //temp ptrs to cross the derivation list
-    char* MagicNb;
+void fillMNb(p_dict_line my_word, int type,p_node temp) {
+    p_cell temp1, temp2, temp3; //temp ptrs to cross the derivation list
+    char *MagicNb;
     int tabSize;
-    char** details_tab;
-    int bool=0;
+    char **details_tab;
+    int bool = 0;
     //Creation of the array of details
-
-    splitStr(my_word->details,':',&details_tab,&tabSize);
+    splitStr(my_word->details, ':', &details_tab, &tabSize);
     // If tabSize =O => it means it's an adv
-    if(tabSize==0){
-        details_tab[0]="Adv";
+    if (tabSize == 0) {
+        details_tab[0] = "Adv";
     }
 
-    int n=0;
-    while (bool!=1 && n<strlen((my_word->details))){
-        if (my_word->details[n]=='+'){
-            bool=1;
+    int n = 0;
+
+    // Is '+' in the details ?
+    while (bool != 1 && n < strlen((my_word->details))) {
+        if (my_word->details[n] == '+') {
+            bool = 1;
         }
         n++;
     }
 
-    if (bool==1||type==3){
-        for(int i=1;i<tabSize;i++) {
-            MagicNb= GenerateMagicNumber(details_tab[i],type);
-            printf("generate ok\n");
+    if (bool == 1 || type == 3) {
+        for (int i = 1; i < tabSize; i++) {
+            MagicNb = GenerateMagicNumber(details_tab[i], type);
+            //printf("MNB: %s\n",MagicNb);
             temp1 = temp->derives->head;
-
             //Is my derivation list empty ?
             if (temp1 == NULL) {
-                printf("if ok\n");
                 temp1 = CreateCell(my_word->word);
-                printf("createcell ok\n");
                 temp1->derive->magic_nbr = MagicNb;
+                temp3=temp1;
+                while(temp3!=NULL)
+                {
+                    printf("%s %s ->",temp3->derive->value,temp3->derive->magic_nbr);
+                    temp3 = temp3->next;
+                }
+
             }
                 // If not: is the derivation already in the list ?
             else {
                 bool = 0;
                 //Is the derivation already in the list ?
                 while (temp1->next != NULL && bool != 1) {
-                    if (MagicNb == temp1->derive->magic_nbr){
+                    if (MagicNb == temp1->derive->magic_nbr) {
                         bool = 1;
                     }
                     temp1 = temp1->next;
@@ -423,9 +433,9 @@ void fillMNb(p_dict_line my_word, int type,p_node temp){
                 }
             }
         }
+        //printf("MNB: %s",MagicNb);
     }
 }
-
 /*Function which add n words to a subtree
  * n: nb words in dict (-1 for all)
  * type: 0 verb , 1 noun , 2 adj , 3 adv , -1 any type
@@ -438,14 +448,14 @@ void addword(p_root* my_tree,p_dict_line my_word, int type)
             p_node subtree = (*my_tree)->node->next[0];
             p_node temp = subtree; //temp ptr to cross the subtree
             createword(my_word,temp);
-            //fillMNb(my_word, type, temp);
+            fillMNb(my_word, type, temp);
             break;
         }
         case 1:
         {
             p_node subtree = (*my_tree)->node->next[1];
             p_node temp = subtree; //temp ptr to cross the subtree
-            p_cell temp1,temp2; //temp ptrs to cross the derivation list
+            p_cell temp1,temp2,temp5; //temp ptrs to cross the derivation list
             p_node result;
             p_node temp3;
             char my_letter;
@@ -453,7 +463,7 @@ void addword(p_root* my_tree,p_dict_line my_word, int type)
             int tabSize,temp4;
             char** details_tab;
             int bool=0;
-            int bool2;
+
             //Loop to cross the subtree & add nodes (OK)
             for(int i=0;i<strlen(my_word->root);i++)
             {
@@ -476,20 +486,14 @@ void addword(p_root* my_tree,p_dict_line my_word, int type)
             //Creation of the array of details
             // +4 to ignore "Nom:"
             splitStr(my_word->details,':',&details_tab,&tabSize);
-            printf("split nom ok et tabsize = %d",tabSize);
-            for(int i=1;i<tabSize;i++) {
+            for(int i=1;i<tabSize;i++){
                 MagicNb= GenerateMagicNumber(details_tab[i],type);
-                printf("MNB nom ok: %s",MagicNb);
-                //temp1 = temp->derives->head;
-
-                temp1 = NULL;
+                //printf("MNB: %s\n",MagicNb);
+                temp1 = temp->derives->head;
                 //Is my derivation list empty ?
                 if (temp1 == NULL) {
-                    printf("if nom ok\n");
                     temp1 = CreateCell(my_word->word);
-                    printf("create cell ok\n");
                     temp1->derive->magic_nbr = MagicNb;
-                    printf("fill mnbr ok\n");
                 }
                 // If not: is the derivation already in the list ?
                 else {
@@ -518,7 +522,7 @@ void addword(p_root* my_tree,p_dict_line my_word, int type)
             p_node subtree = (*my_tree)->node->next[2];
             p_node temp = subtree; //temp ptr to cross the subtree
             createword(my_word,temp);
-            //fillMNb(my_word, type, temp);
+            fillMNb(my_word, type, temp);
             break;
         }
         case 3:

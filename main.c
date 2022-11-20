@@ -111,7 +111,7 @@ int main() {
             }
             case(3):
             {
-                fillTree(&my_tree,parsedDict,287977,size);
+                fillTree(&my_tree,parsedDict,500,size);
                 break;
             }
             case(4):
