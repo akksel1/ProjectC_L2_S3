@@ -61,94 +61,82 @@ char* findwordoftype(p_root my_tree,int type){
     word=(char*) malloc(sizeof(char)*25);
     int n;
     int nextexist=1,foundword=0; //boolean to check the different cases
-    printf("1\n");
     while (foundword!=1){ //as long as we did not take a word
         //if we start again we have to reset some variables
         temp=subtree;
         int k=0;
-        //word="";
-        printf("2\n");
         nextexist=1;
         while(nextexist==1){ //as long as we still have possibilities for the next letter
-            printf("3\n");
-            if (temp==NULL){
-                printf("et bah si\n");
-            }
             if (temp->derives->head!=NULL){
-                printf("4\n");
                 if (k<6){
-                    printf("5\n");
                     foundword=rand()%(7-k); //the longer the word the higher the chance to take it
-                    printf("6\n");
                 }
                 else{
                     foundword=rand()%2;//if this is the end of a word longer than 5 letters then 50% chance of taking it
-                    printf("7\n");
                 }
 
             }
             if (foundword!=1){
-                printf("8\n");
                 if (k!=0){
-                    printf("value : %c and k= %d\n",temp->val,k);
                     word[k-1]=temp->val;
-                    printf(" word : %s\n",word);
                 }
 
                 n=0;
-                printf("8.5\n");
                 for (int i=0;i<26;i++){
-                    printf("9\n");
                     if(temp->next[i]!=NULL){ // find the number of possible letters
                         n++;
-                        printf("10\n");
                     }
-                    printf(" size of tab is %d\n",n);
                 }
                 if (n==0){
-                    printf("11\n");
                     nextexist=0; //check if there are any
                     foundword=1; // if we r at the end of the tree then it's a word
                 }
                 else{
-                    printf("12\n");
                     int* tab=(int*) malloc(sizeof(int)*n);
                     n=0;
                     for (int i=0;i<26;i++){
-                        printf("13\n");
                         if(temp->next[i]!=NULL){
-                            printf("14\n");
-                            printf("index= %d\n",i);
                             tab[n]=i;
                             n++; //fill the tab of possible next letters
                         }
                     }
-                    printf("15\n");
                     int nextl;
                     nextl=rand()%n;//choose one
                     temp=temp->next[tab[nextl]];//and go to the next letter
                     k++;
                 }
-                printf("16\n");
             }
             else{
-                printf("17\n");
                 nextexist=0; //if we have a word we need to get out of the loop
             }
-            //nextexist=0;//to delete
-            printf("18\n");
         }
-        //foundword=1;//to delete
-        printf("19\n");
     }
-    printf("20\n");
     return word;
 }
 
 void sentence1(p_root my_tree){//nom – adjectif – verbe – nom
-    printf("Un %s %s %s un %s",findwordoftype(my_tree,1),findwordoftype(my_tree,2),findwordoftype(my_tree,0),findwordoftype(my_tree,1));
+    char* noun = findwordoftype(my_tree,1);
+    sleep(1); //to reset seed for randomness because it uses time.
+    char* adj = findwordoftype(my_tree,2);
+    char* verb = findwordoftype(my_tree,0);
+    char* noun2 = findwordoftype(my_tree,1);
+    printf("Un %s %s %s un %s",noun, adj, verb, noun2);
 }
 void sentence2(p_root my_tree){//nom – ‘qui’ – verbe – verbe – nom – adjectif
-    printf("Un %s qui %s %s un %s %s",findwordoftype(my_tree,1),findwordoftype(my_tree,0),findwordoftype(my_tree,0),findwordoftype(my_tree,1),findwordoftype(my_tree,2));
+    char* noun = findwordoftype(my_tree,1);
+    char* verb = findwordoftype(my_tree,0);
+    sleep(1); //to reset seed for randomness because it uses time.
+    char* verb2 = findwordoftype(my_tree,0);
+    char* noun2 = findwordoftype(my_tree,1);
+    char* adj = findwordoftype(my_tree,2);
+    printf("Un %s qui %s %s un %s %s",noun, verb, verb2, noun2, adj);
 
+}
+
+void sentence3(p_root my_tree){//nom - adjectif - verbe '-t-il' adverbe
+    char* noun = findwordoftype(my_tree,1);
+    char* adj = findwordoftype(my_tree,2);
+    char* verb = findwordoftype(my_tree,0);
+    char* adv = findwordoftype(my_tree,3);
+    printf("%s %s %s-t-il %s ?",noun, adj, verb, adv);
 }

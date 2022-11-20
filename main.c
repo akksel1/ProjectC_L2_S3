@@ -41,7 +41,7 @@ char* generate_dict_abs_path(char* relative_path){
 }
 
 p_dict_line* parseLines(int* tabsize){
-    char* fpath = "C:\\Users\\akksel\\CLionProjects\\ProjectC_L2_S3\\sources\\dico.txt";
+    char* fpath = generate_dict_abs_path("/sources/dico.txt");
     char** lines;
     int size;
     *(tabsize) = 0;
@@ -138,7 +138,7 @@ int main() {
             }
             case(5):
             {
-                printf("\n1 - A full sentence using the roots\n2 - A full sentence using derives\n3: Go back\nEnter:");
+                printf("\n1 - Sentence type 1 (nom  adjectif  verbe  nom)\n2 - Sentence type 2 (nom \"qui\" verbe verbe nom adjectif)\n3 - Sentence type 3 (nom  adjectif  verbe \" t il\" adverbe ?)\n4: Go back\nEnter:");
                 scanf("%d",&choice);
                 while(choice>3||choice<1)
                 {
@@ -149,17 +149,20 @@ int main() {
                 {
                     case 1:
                     {
-                        printf("Which type ? Enter:");
-                        scanf("%d",&type);
-                        printf("Mot: %s",findwordoftype(my_tree,type));
+                        sentence1(my_tree);
                         break;
                     }
                     case 2:
                     {
-                        printf("\nNot available yet ... stay tuned\n");
+                        sentence2(my_tree);
                         break;
                     }
                     case 3:
+                    {
+                        sentence3(my_tree);
+                        break;
+                    }
+                    case 4:
                     {
                         break;
                     }

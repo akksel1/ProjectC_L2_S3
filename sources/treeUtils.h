@@ -18,4 +18,5 @@ void fillTree(p_root*,p_dict_line*,int,int);
 char* findwordoftype(p_root,int);
 void sentence1(p_root);
 void sentence2(p_root);
+void sentence3(p_root);
 #endif //PROJET_C_TREEUTILS_H
