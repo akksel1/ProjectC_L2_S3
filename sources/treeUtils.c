@@ -68,7 +68,13 @@ char* findwordoftype(p_root my_tree,int type){
         word="";
         while(nextexist==1){ //as long as we still have possibilities for the next letter
             if (temp->derives!=NULL){
-                foundword=rand()%2; //if this is the end of a word then 50% chance of taking it
+                if (k<6){
+                    foundword=rand()%(7-k); //the longer the word the higher the to take it
+                }
+                else{
+                    foundword=rand()%2;//if this is the end of a word longer than 5 letters then 50% chance of taking it
+                }
+
             }
             if (foundword==0){
                 word[k]=temp->val;
