@@ -61,7 +61,7 @@ char* findwordoftype(p_root my_tree,int type){
     word=(char*) malloc(sizeof(char)*25);
     int n;
     int nextexist=1,foundword=0; //boolean to check the different cases
-    while (foundword==0){ //as long as we did not take a word
+    while (foundword!=1){ //as long as we did not take a word
         //if we start again we have to reset some variables
         temp=subtree;
         int k=0;
@@ -76,7 +76,7 @@ char* findwordoftype(p_root my_tree,int type){
                 }
 
             }
-            if (foundword==0){
+            if (foundword!=1){
                 word[k]=temp->val;
                 n=0;
                 for (int i=0;i<26;i++){
