@@ -8,12 +8,12 @@
 #include "words.h"
 #include <time.h>
 #include <stdlib.h>
-
+#include <math.h>
 
 p_root createEmptyTree();
 //creation of the general tree
 p_node setupsubTree(char);
 p_root setupTree();
 void fillTree(p_root*,p_dict_line*,int,int);
-
+char* findwordoftype(p_root,int);
 #endif //PROJET_C_TREEUTILS_H
